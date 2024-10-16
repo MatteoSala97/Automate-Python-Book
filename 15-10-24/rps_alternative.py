@@ -42,14 +42,17 @@ while True:
             print('PAPER')
         case 's':
             print('SCISSORS')
-    
+
+
+    matches={"r": "s", "p": "r", "s": "p"}
     # updates scoreboard
     if player_move == computer_move:
         print('It is a tie!')
         ties += 1
-    elif (player_move == 'r' and computer_move == 's') or \
-         (player_move == 'p' and computer_move == 'r') or \
-         (player_move == 's' and computer_move == 'p'):
+    elif (matches[player_move] == computer_move):
+    # elif (player_move == 'r' and computer_move == 's') or \
+    #      (player_move == 'p' and computer_move == 'r') or \
+    #      (player_move == 's' and computer_move == 'p'):
         print('You win!')
         wins += 1
     else:
