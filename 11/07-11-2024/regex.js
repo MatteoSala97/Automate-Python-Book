@@ -48,4 +48,17 @@ BOSS FINALE DELLA REGEX LIVELLO 9000:
 
 \(?\+?39\)?[ -]?(\d{3})[ -]?(\d{3})[ -]?(\d{4})
 
+
+
+
+REGEX PER TROVARE UN'EMAIL: 
+
+MAIL DA MATCHARE: 
+
+aloha123@gmail.com
+alooo22@net.it
+
+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}
+
+
 */
