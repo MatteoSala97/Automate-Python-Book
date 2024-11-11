@@ -83,7 +83,8 @@ class WeatherCompanion:
             'q': city,
             'appid': self.api_key,
             'units': 'metric' ,
-            'lang': lang
+            'lang': lang,
+            # 'sys': sys
         }
         
         response = requests.get(self.base_url, params=params)
@@ -95,8 +96,9 @@ class WeatherCompanion:
     def print_weather(self, city, lang='it'):
         try:
             weather_data = self.get_weather(city)
-            print(f"Meteo a {city}: {weather_data['weather'][0]['description']}")
+            print(f"Meteo a {city}: {weather_data['weather'][0]['description'].capitalize()}")
             print(f"Temperatura: {weather_data['main']['temp']}°C")
+            print(f"Temperatura minima e massima: {weather_data['main']['temp_min']}°C - {weather_data['main']['temp_max']}°C")
             print(f"Umidità: {weather_data['main']['humidity']}%")
             print(f"Velocità del vento: {weather_data['wind']['speed']} m/s")
         except requests.exceptions.HTTPError as http_err:
