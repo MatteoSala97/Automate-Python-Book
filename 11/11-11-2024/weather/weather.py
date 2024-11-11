@@ -2,6 +2,10 @@ import os
 import requests
 from dotenv import load_dotenv
 
+# Aggiunti gli import per simulare una specie di app 
+import tkinter as tk
+from tkinter import messagebox
+
 # link to the site
 # https://openweathermap.org
 
@@ -93,19 +97,59 @@ class WeatherCompanion:
         else:
             response.raise_for_status()
 
-    def print_weather(self, city, lang='it'):
+    def format_weather(self, city):
         try:
             weather_data = self.get_weather(city)
-            print(f"Meteo a {city}: {weather_data['weather'][0]['description'].capitalize()}")
-            print(f"Temperatura: {weather_data['main']['temp']}°C")
-            print(f"Temperatura minima e massima: {weather_data['main']['temp_min']}°C - {weather_data['main']['temp_max']}°C")
-            print(f"Umidità: {weather_data['main']['humidity']}%")
-            print(f"Velocità del vento: {weather_data['wind']['speed']} m/s")
-        except requests.exceptions.HTTPError as http_err:
-            print('Mannagg non funzia')
+            description = weather_data['weather'][0]['description'].capitalize()
+            temp = weather_data['main']['temp']
+            feels_like = weather_data['main']['feels_like']
+            temp_min = weather_data['main']['temp_min']
+            temp_max = weather_data['main']['temp_max']
+            humidity = weather_data['main']['humidity']
+            wind_speed = weather_data['wind']['speed']
 
-if __name__ == '__main__':
-    client = WeatherCompanion()
-    city = input('Inserisci il nome della città: ')
-    client.print_weather(city)
+            return f"Meteo a {city}: {description}\n" \
+                f"Temperatura: {temp}°C\n" \
+                f"Percepiti: {feels_like}°C\n" \
+                f"Temperatura minima e massima: {temp_min}°C - {temp_max}°C\n" \
+                f"Umidità: {humidity}%\n" \
+                f"Velocità del vento: {wind_speed} m/s"
+        except requests.exceptions.HTTPError:
+            return "Mannagg non funziona mica."
 
+class WeatherApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Weather Companion")
+    
+        root.config(bg="lightblue")
+        # Crea un'istanza della classe WeatherCompanion
+        self.client = WeatherCompanion()
+        
+        # Layout dell'interfaccia
+        self.city_label = tk.Label(root, text="Inserisci il nome della città:")
+        self.city_label.pack(pady=5)
+        
+        self.city_entry = tk.Entry(root, width=30)
+        self.city_entry.pack(pady=10)
+        
+        self.get_weather_button = tk.Button(root, text="Mostra Meteo", command=self.display_weather)
+        self.get_weather_button.pack(pady=20)
+        
+        self.weather_output = tk.Text(root, height=10, width=50)
+        self.weather_output.pack(pady=10)
+        self.weather_output.config(bg="Light Cyan")
+        
+    def display_weather(self):
+        city = self.city_entry.get()
+        if city:
+            weather_info = self.client.format_weather(city)
+            self.weather_output.delete(1.0, tk.END)  # Pulisce la Text Box
+            self.weather_output.insert(tk.END, weather_info)  # Mostra i dati
+        else:
+            messagebox.showwarning("Input errato", "Per favore, inserisci una città.")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = WeatherApp(root)
+    root.mainloop()
